@@ -109,30 +109,35 @@ const CreateCourseSection: React.FC = () => {
         className="w-full max-w-lg space-y-6"
       >
         <TextField
+          required
           label="Course ID"
           {...register("courseId")}
           fullWidth
           variant="outlined"
         />
         <TextField
+          required
           label="Title"
           {...register("title")}
           fullWidth
           variant="outlined"
         />
         <TextField
+          required
           label="Banner"
           {...register("banner")}
           fullWidth
           variant="outlined"
         />
         <TextField
+          required
           label="Notes"
           {...register("notes")}
           fullWidth
           variant="outlined"
         />
         <TextField
+          required
           label="Description"
           {...register("description")}
           fullWidth
