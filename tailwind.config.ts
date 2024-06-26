@@ -1,3 +1,4 @@
+import { almarai } from "@/utils/helpers";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -31,7 +32,8 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-almarai)", "sans-serif"],
+        sans: ["sans-serif"],
+        almarai: ["var(--font-almarai)"],
       },
       colors: {
         transparent: "transparent",

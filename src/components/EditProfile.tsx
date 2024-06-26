@@ -34,15 +34,11 @@ const EditProfile = () => {
         notify("تم تحديث الملف الشخصي بنجاح", { type: "success" });
         const auth = nookies.get()["auth"];
         if (auth) {
-          const { data } = JSON.parse(auth);
-          const user = data.teacher_login.data;
-          const updatedUser = {
-            ...user,
-            username: response.data.teacher_editProfile.data.username,
-          };
+          const parsedAuth = JSON.parse(auth);
+          parsedAuth.data.teacher_login.data.username =
+            response.data.teacher_editProfile.data.username;
 
-          //TODO: UPDATE THIS TO FOX LOCAL MAPPING OF UPDATEDuSER
-          nookies.set(null, "auth", JSON.stringify(updatedUser), {
+          nookies.set(null, "auth", JSON.stringify(parsedAuth), {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
             strict: true,

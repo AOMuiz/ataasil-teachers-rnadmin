@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useLogin, useNotify, Notification } from "react-admin";
 import { useForm } from "react-hook-form";
 import CtaButton from "../CtaButton";
+import { almarai } from "@/utils/helpers";
 
 export interface ILoginForm {
   email: string;
@@ -18,7 +19,10 @@ export default function Login() {
   } = useForm<ILoginForm>();
 
   return (
-    <div className="grid place-items-center h-screen">
+    <main
+      className={`grid place-items-center h-screen font-almarai ${almarai.variable}`}
+      dir="rtl"
+    >
       <div>
         <div className="mb-4 flex items-center justify-center">
           <Image src={"/svg/logo.svg"} alt="" height={100} width={200} />
@@ -69,14 +73,14 @@ export default function Login() {
 
           <CtaButton
             disabled={isLoading}
-            className="w-full rounded-md font-bold"
+            className="w-full rounded-md font-bold disabled:bg-gray-500"
             type="submit"
           >
             {isLoading ? "loading..." : " تسجيل الدخول"}
           </CtaButton>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
 

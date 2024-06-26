@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import React from "react";
 import { useGetIdentity, useLogout } from "react-admin";
 import HamburgerIcon from "../svg/hamburgerIcon";
 import LogoutIcon from "../svg/logout";
@@ -30,16 +30,16 @@ const Navbar = ({ title }: { title?: string }) => {
         </div>
 
         <div className="border-x-2 gap-3 flex items-center justify-center cursor-pointer  p-4">
-          <Link href="/">
+          <NavLink to="/edit-profile">
             <p className="text-white flex h-10 w-10 items-center justify-center rounded-full bg-primary-P300 text-center text-xl font-bold uppercase">
               AC
             </p>
-          </Link>
-          <Link href="/">
+          </NavLink>
+          <NavLink to="/edit-profile">
             <div className="flex items-center">
               <p className="capitalize">{identity?.fullName}</p>
             </div>
-          </Link>
+          </NavLink>
         </div>
         <button onClick={() => logout()} className="flex gap-2 items-center">
           <p className="py-2">تسجيل خروج</p>
