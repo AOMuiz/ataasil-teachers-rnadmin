@@ -31,7 +31,7 @@ export const Sidebar = () => {
         className="py-4"
       />
 
-      <ul className="space-y-4">
+      <ul className="space-y-7">
         <SidebarItem
           // name="الرئيسية"
           name="لوحة القيادة"

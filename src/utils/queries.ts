@@ -29,3 +29,34 @@ export const GET_COURSES = gql`
     }
   }
 `;
+
+export const COURSE_GET_SECTIONS = gql`
+  query Course_getSections($courseId: ID!) {
+    course_getSections(courseId: $courseId) {
+      _id
+      course
+      title
+      banner
+      notes
+      description
+      isCompleted
+      files {
+        format
+        src
+        contentType
+        size
+        description
+        title
+        isPreview
+      }
+      test {
+        _id
+        question
+        options
+        answers
+        isAnswerMultiple
+        score
+      }
+    }
+  }
+`;

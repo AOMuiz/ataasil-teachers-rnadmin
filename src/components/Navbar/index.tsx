@@ -17,12 +17,8 @@ const Navbar = ({ title }: { title?: string }) => {
   const { data: identity } = useGetIdentity();
   const logout = useLogout();
 
-  useEffect(() => {
-    console.log({ identity });
-  }, [identity]);
-
   return (
-    <nav className="px-10 h-20 shadow-sm flex items-center justify-between bg-white">
+    <nav className="px-10 h-20 shadow-sm flex items-center justify-between bg-white border-b">
       <div className="flex gap-12 items-center py-4 ">
         <HamburgerIcon />
       </div>
@@ -35,7 +31,7 @@ const Navbar = ({ title }: { title?: string }) => {
 
         <div className="border-x-2 gap-3 flex items-center justify-center cursor-pointer  p-4">
           <Link href="/">
-            <p className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-P300 text-center text-xl font-bold uppercase">
+            <p className="text-white flex h-10 w-10 items-center justify-center rounded-full bg-primary-P300 text-center text-xl font-bold uppercase">
               AC
             </p>
           </Link>

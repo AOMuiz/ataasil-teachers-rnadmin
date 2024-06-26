@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 export const Dashboard = () => (
-  <div className="p-10">
+  <div>
     <div className="space-y-3">
       <h2 className="font-bold text-3xl">لوحة القيادة</h2>
       <p className="text-[#5A5A5A]">

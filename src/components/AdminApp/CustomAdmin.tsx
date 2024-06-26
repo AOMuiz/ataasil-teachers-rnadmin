@@ -6,6 +6,7 @@ import {
   CustomRoutes,
   DataProvider,
   Resource,
+  defaultTheme,
 } from "react-admin";
 import { ApolloProvider } from "@apollo/client";
 
@@ -20,7 +21,9 @@ import EditProfile from "../EditProfile";
 import ForgotPassword from "../ForgotPassword";
 import ResetPassword from "../ResetPassword";
 import { Route } from "react-router-dom";
-import CreateCourse from "../CreateCourse";
+import CourseSections from "../Courses/CourseSections";
+import CreateCourse from "../Courses/CreateCourse";
+import CreateCourseSection from "../Courses/CreateSections";
 
 const CustomAdmin = () => {
   const [dataProvider, setDataProvider] = useState<null | DataProvider>(null);
@@ -55,6 +58,14 @@ const CustomAdmin = () => {
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/create" element={<CreateCourse />} />
+            <Route
+              path="/courses/:course_id/sections"
+              element={<CourseSections />}
+            />
+            <Route
+              path="/courses/:course_id/sections/create"
+              element={<CreateCourseSection />}
+            />
           </CustomRoutes>
           <CustomRoutes noLayout>
             <Route path="/forgot-password" element={<ForgotPassword />} />

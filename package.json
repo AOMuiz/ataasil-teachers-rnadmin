@@ -11,6 +11,7 @@
   "dependencies": {
     "clsx": "^2.1.0",
     "graphql": "^15.8.0",
+    "jss-rtl": "^0.3.0",
     "next": "14.0.4",
     "nookies": "^2.5.2",
     "ra-data-graphql": "^4.16.17",

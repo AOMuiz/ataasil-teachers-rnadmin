@@ -11,14 +11,14 @@ const almarai = Almarai({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { locale } = useRouter();
-  const dir = locale === "ar" ? "rtl" : "ltr";
-  const lang = locale === "ar" ? "ar" : "en";
+  // const { locale } = useRouter();
+  // const dir = locale === "ar" ? "rtl" : "ltr";
+  // const lang = locale === "ar" ? "ar" : "en";
 
-  useEffect(() => {
-    document.documentElement.dir = dir;
-    document.documentElement.lang = lang;
-  }, [dir, lang]);
+  // useEffect(() => {
+  //   document.documentElement.dir = dir;
+  //   document.documentElement.lang = lang;
+  // }, [dir, lang]);
 
   return (
     <>
