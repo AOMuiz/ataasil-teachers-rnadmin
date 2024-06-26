@@ -1,7 +1,7 @@
 import { AuthProvider } from "react-admin";
 import nookies from "nookies";
 import { client } from "./buildprovider";
-import { AUTHENTICATE_ADMIN, AUTHENTICATE_TEACHER } from "./graphql/mutations";
+import { AUTHENTICATE_TEACHER } from "./graphql/mutations";
 
 const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
@@ -33,10 +33,12 @@ const authProvider: AuthProvider = {
   },
   // called when the user navigates to a new location, to check for authentication
   checkAuth: async (ctx: any) => {
-    const cookies = nookies.get(ctx);
-    if (cookies["auth"]) {
-      const user = JSON.parse(cookies.auth);
-      return user;
+    const auth = nookies.get()["auth"];
+    console.log({ auth });
+
+    if (auth) {
+      // const user = JSON.parse(cookies.auth);
+      return Promise.resolve();
     } else {
       return Promise.reject();
     }
@@ -44,8 +46,6 @@ const authProvider: AuthProvider = {
   getIdentity: () => {
     try {
       const auth = nookies.get()["auth"];
-      console.log({ auth });
-
       if (auth) {
         const { data } = JSON.parse(auth);
         const { _id, username, email } = data.teacher_login.data;
@@ -70,7 +70,7 @@ const authProvider: AuthProvider = {
       throw new Error(body.error);
     }
 
-    return Promise.resolve(error);
+    return Promise.resolve();
   },
   // called when the user navigates to a new location, to check for permissions / roles
   getPermissions: () => Promise.resolve(),

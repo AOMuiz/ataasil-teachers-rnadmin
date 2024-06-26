@@ -3,7 +3,6 @@ import { Almarai } from "next/font/google";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import ProtectedRoute from "@/components/protected";
 
 const almarai = Almarai({
   weight: ["300", "400", "700", "800"],
@@ -28,7 +27,6 @@ export default function App({ Component, pageProps }: AppProps) {
           font-family: ${almarai.style.fontFamily};
         }
       `}</style>
-
       <Component {...pageProps} />
     </>
   );

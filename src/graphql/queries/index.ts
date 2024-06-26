@@ -9,7 +9,8 @@ export const ADMIN_PROFILE = gql`
     }
   }
 `;
-export const TEACHERS = gql`
+
+export const ALL_TEACHERS = gql`
   query AllTeachers(
     $page: Int
     $perPage: Int
@@ -28,6 +29,14 @@ export const TEACHERS = gql`
       email
       username
       isAccountActivated
+    }
+  }
+`;
+
+export const ALL_PAYMENTS = gql`
+  query AllPayments {
+    allPayments {
+      url
     }
   }
 `;

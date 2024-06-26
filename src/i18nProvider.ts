@@ -11,7 +11,7 @@ export const i18nProvider = polyglotI18nProvider(
   (locale) => {
     return translations[locale];
   },
-  "ar", // default locale
+  "en", // default locale
   [
     { locale: "ar", name: "Arabic" },
     { locale: "en", name: "English" },

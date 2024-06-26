@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { useGetIdentity, useLogout } from "react-admin";
 import HamburgerIcon from "../svg/hamburgerIcon";
 import LogoutIcon from "../svg/logout";
+import { BiChevronDown } from "react-icons/bi";
 
 type IIdentity = {
   _id: string;
@@ -12,31 +13,35 @@ type IIdentity = {
   isAccountActivated: boolean;
 };
 
-const Navbar = () => {
+const Navbar = ({ title }: { title?: string }) => {
   const { data: identity } = useGetIdentity();
   const logout = useLogout();
 
+  useEffect(() => {
+    console.log({ identity });
+  }, [identity]);
+
   return (
-    <nav className="px-10 h-20 shadow-sm flex items-center justify-between">
+    <nav className="px-10 h-20 shadow-sm flex items-center justify-between bg-white">
       <div className="flex gap-12 items-center py-4 ">
-        <Image src={"/svg/logo.svg"} alt="" height={83} width={63} />
         <HamburgerIcon />
       </div>
       <div className="flex items-center gap-5">
-        <div className="border-e-[#D5DBE2] border-e py-4 pe-4 flex items-center gap-3 h-full">
-          <Image src={"/svg/flag-ar.svg"} alt="flag" width={18} height={12} />
+        <div className="border-e-[#D5DBE2]  py-4 flex items-center gap-2 h-full">
+          <Image src={"/svg/flag.svg"} alt="flag" width={18} height={12} />
           <p>العربية</p>
+          <BiChevronDown />
         </div>
 
-        <div className="flex cursor-pointer items-center gap-4 pe-4 border-e-[#D5DBE2] border-e py-4">
-          <Link href="/dashboard">
+        <div className="border-x-2 gap-3 flex items-center justify-center cursor-pointer  p-4">
+          <Link href="/">
             <p className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-P300 text-center text-xl font-bold uppercase">
-              {identity?.name[0]}
+              AC
             </p>
           </Link>
-          <Link href="/dashboard">
+          <Link href="/">
             <div className="flex items-center">
-              <p className="capitalize">{identity?.name}</p>
+              <p className="capitalize">{identity?.fullName}</p>
             </div>
           </Link>
         </div>
