@@ -1,14 +1,9 @@
 import "@/styles/globals.css";
-import { Almarai } from "next/font/google";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
-const almarai = Almarai({
-  weight: ["300", "400", "700", "800"],
-  subsets: ["arabic"],
-  variable: "--font-almarai",
-});
+import Head from "next/head";
+import { almarai } from "@/utils/helpers";
 
 export default function App({ Component, pageProps }: AppProps) {
   // const { locale } = useRouter();
@@ -27,6 +22,12 @@ export default function App({ Component, pageProps }: AppProps) {
           font-family: ${almarai.style.fontFamily};
         }
       `}</style>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Ataasil Teachers</title>
+      </Head>
       <Component {...pageProps} />
     </>
   );

@@ -7,22 +7,19 @@ import {
   useResourceDefinitions,
 } from "ra-core";
 
-import { useRedirect, Logout, useLogout } from "react-admin";
-import { BiHome, BiLogOut } from "react-icons/bi";
+import { useLogout } from "react-admin";
+import { BiLogOut } from "react-icons/bi";
 import { FaCircleUser } from "react-icons/fa6";
 import { RiHome5Fill } from "react-icons/ri";
 
-import { Box, useMediaQuery } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 import BookIcon from "@mui/icons-material/Book";
 import { ReactNode } from "react";
 
 export const Sidebar = () => {
   const logout = useLogout();
-  const redirect = useRedirect();
 
   return (
-    <nav className="text-black bg-white space-y-3 px-10">
+    <nav className="text-black bg-white space-y-3 px-10 border-e">
       <Image
         src={"/svg/logo.svg"}
         alt=""
@@ -49,7 +46,7 @@ export const Sidebar = () => {
           leftIcon={<FaCircleUser size={24} className="text-[#31C0CC]" />}
         />
         <li>
-          <button onClick={() => logout()} className="gap-3 flex items-center">
+          <button onClick={logout} className="gap-3 flex items-center">
             <BiLogOut className="text-[#31C0CC]" size={24} /> تسجيل خروج
           </button>
         </li>
