@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNotify } from "react-admin";
+import { NavLink, useParams } from "react-router-dom";
 
 interface FormInputs {
   courseId: string;
@@ -36,9 +37,10 @@ interface FormInputs {
 }
 
 const CreateCourseSection: React.FC = () => {
+  const { course_id } = useParams<{ course_id: string }>();
   const { control, handleSubmit, register } = useForm<FormInputs>({
     defaultValues: {
-      courseId: "",
+      courseId: course_id,
       title: "",
       banner: "",
       notes: "",
@@ -95,7 +97,13 @@ const CreateCourseSection: React.FC = () => {
   };
 
   return (
-    <Box className="h-screen flex flex-col items-center justify-center p-10">
+    <Box className="flex flex-col items-center justify-center p-10">
+      <div className="space-y-3 mb-4" dir="rtl">
+        <h2 className="font-bold text-3xl">إنشاء قسم الدورة</h2>
+        <p className="text-[#5A5A5A]">
+          هنا يمكنك إنشاء قسم جديد للدورة التدريبية وإدخال التفاصيل اللازمة.
+        </p>
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-lg space-y-6"
@@ -130,134 +138,138 @@ const CreateCourseSection: React.FC = () => {
           fullWidth
           variant="outlined"
         />
-
-        {fileFields.map((field, index) => (
-          <div key={field.id} className="space-y-4">
-            <TextField
-              label="File Format"
-              {...register(`files.${index}.format`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="File Source"
-              {...register(`files.${index}.src`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="Content Type"
-              {...register(`files.${index}.contentType`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="Size"
-              type="number"
-              {...register(`files.${index}.size`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="Description"
-              {...register(`files.${index}.description`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="Title"
-              {...register(`files.${index}.title`)}
-              fullWidth
-              variant="outlined"
-            />
-            <Controller
-              name={`files.${index}.isPreview`}
-              control={control}
-              render={({ field }) => (
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" {...field} />
-                  <span>Is Preview</span>
-                </label>
-              )}
-            />
-          </div>
-        ))}
-        <Button
-          type="button"
-          onClick={() =>
-            appendFile({
-              format: "",
-              src: "",
-              contentType: "",
-              size: 0,
-              description: "",
-              title: "",
-              isPreview: false,
-            })
-          }
-        >
-          Add File
-        </Button>
-
-        {testFields.map((field, index) => (
-          <div key={field.id} className="space-y-4">
-            <TextField
-              label="Question"
-              {...register(`test.${index}.question`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="Options"
-              {...register(`test.${index}.options.0`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="Options"
-              {...register(`test.${index}.options.1`)}
-              fullWidth
-              variant="outlined"
-            />
-            <TextField
-              label="Answers"
-              {...register(`test.${index}.answers.0`)}
-              fullWidth
-              variant="outlined"
-            />
-            <Controller
-              name={`test.${index}.isAnswerMultiple`}
-              control={control}
-              render={({ field }) => (
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" {...field} />
-                  <span>Is Answer Multiple</span>
-                </label>
-              )}
-            />
-            <TextField
-              label="Score"
-              type="number"
-              {...register(`test.${index}.score`)}
-              fullWidth
-              variant="outlined"
-            />
-          </div>
-        ))}
-        <Button
-          type="button"
-          onClick={() =>
-            appendTest({
-              question: "",
-              options: ["", ""],
-              answers: [""],
-              isAnswerMultiple: false,
-              score: 0,
-            })
-          }
-        >
-          Add Test Question
-        </Button>
+        <section>
+          <p className="font-bold text-lg">Course Section Files</p>
+          {fileFields.map((field, index) => (
+            <div key={field.id} className="space-y-4">
+              <TextField
+                label="File Format"
+                {...register(`files.${index}.format`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="File Source"
+                {...register(`files.${index}.src`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Content Type"
+                {...register(`files.${index}.contentType`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Size"
+                type="number"
+                {...register(`files.${index}.size`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Description"
+                {...register(`files.${index}.description`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Title"
+                {...register(`files.${index}.title`)}
+                fullWidth
+                variant="outlined"
+              />
+              <Controller
+                name={`files.${index}.isPreview`}
+                control={control}
+                render={({ field }) => (
+                  <label className="flex items-center space-x-2">
+                    <input type="checkbox" {...field} />
+                    <span>Is Preview</span>
+                  </label>
+                )}
+              />
+            </div>
+          ))}
+          <Button
+            type="button"
+            onClick={() =>
+              appendFile({
+                format: "",
+                src: "",
+                contentType: "",
+                size: 0,
+                description: "",
+                title: "",
+                isPreview: false,
+              })
+            }
+          >
+            Add File
+          </Button>
+        </section>
+        <section>
+          <p className="font-bold text-lg">Course Section Quiz/Questions</p>
+          {testFields.map((field, index) => (
+            <div key={field.id} className="space-y-4">
+              <TextField
+                label="Question"
+                {...register(`test.${index}.question`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Options"
+                {...register(`test.${index}.options.0`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Options"
+                {...register(`test.${index}.options.1`)}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Answers"
+                {...register(`test.${index}.answers.0`)}
+                fullWidth
+                variant="outlined"
+              />
+              <Controller
+                name={`test.${index}.isAnswerMultiple`}
+                control={control}
+                render={({ field }) => (
+                  <label className="flex items-center space-x-2">
+                    <input type="checkbox" {...field} />
+                    <span>Is Answer Multiple</span>
+                  </label>
+                )}
+              />
+              <TextField
+                label="Score"
+                type="number"
+                {...register(`test.${index}.score`)}
+                fullWidth
+                variant="outlined"
+              />
+            </div>
+          ))}
+          <Button
+            type="button"
+            onClick={() =>
+              appendTest({
+                question: "",
+                options: ["", ""],
+                answers: [""],
+                isAnswerMultiple: false,
+                score: 0,
+              })
+            }
+          >
+            Add Test Question
+          </Button>
+        </section>
 
         {error && (
           <Typography color="error" variant="body2">

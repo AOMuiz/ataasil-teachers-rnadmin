@@ -92,7 +92,13 @@ const CreateCourse: React.FC = () => {
   };
 
   return (
-    <Box height="100vh">
+    <Box>
+      <div className="space-y-3 mb-4" dir="rtl">
+        <h2 className="font-bold text-3xl">إنشاء دورة</h2>
+        <p className="text-[#5A5A5A]">
+          هنا يمكنك إنشاء دورة جديدة وإدخال التفاصيل اللازمة.
+        </p>
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();

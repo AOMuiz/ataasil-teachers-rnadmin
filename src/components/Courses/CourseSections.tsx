@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
-import { useParams } from "react-router-dom";
 import {
   Box,
   Card,
@@ -11,7 +10,7 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { RiPencilFill } from "react-icons/ri";
 import { Title, useAuthenticated, useNotify } from "react-admin";
 import { COURSE_GET_SECTIONS } from "@/utils/queries";
@@ -41,7 +40,7 @@ const CourseSections: React.FC = () => {
   return (
     <Box minHeight="100%">
       <Title title="أقسام الدورة" />
-      <div className="space-y-3 mb-4" dir="rtl">
+      <div className="space-y-3 mb-4">
         <h2 className="font-bold text-3xl">أقسام الدورة</h2>
         <p className="text-[#5A5A5A]">
           هنا يمكنك إدارة أقسام الدورة التدريبية الخاصة بك.
