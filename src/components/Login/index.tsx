@@ -1,22 +1,36 @@
 import Image from "next/image";
-import { useLogin, useNotify, Notification } from "react-admin";
-import { useForm } from "react-hook-form";
+import {
+  useLogin,
+  useNotify,
+  Notification,
+  defaultTheme,
+  Link,
+} from "react-admin";
+import { Button, Card, CircularProgress, TextField } from "@mui/material";
 import CtaButton from "../CtaButton";
 import { almarai } from "@/utils/helpers";
-
+import { FormEventHandler, useState } from "react";
+import Box from "@mui/material/Box";
 export interface ILoginForm {
   email: string;
   password: string;
 }
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
   const login = useLogin();
   const notify = useNotify();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isLoading },
-  } = useForm<ILoginForm>();
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    login({ email, password }).catch(() => {
+      setLoading(false);
+      notify("Invalid credentials", { type: "error" });
+    });
+  };
 
   return (
     <main
@@ -35,75 +49,52 @@ export default function Login() {
           </h3>
         </div>
 
-        <form
-          onSubmit={handleSubmit((values) => {
-            login({
-              email: values?.email,
-              password: values?.password,
-            }).catch(() => notify("Invalid email or password"));
-          })}
-          className="space-y-5 mt-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
           <label className="flex flex-col gap-2">
             <p className="font-bold text-sm">
               البريد الإلكتروني / الهوية الوطنية *
             </p>
             <input
-              {...register("email", { required: true })}
+              required
+              id="email"
+              name="email"
               type="email"
               placeholder="البريد الإلكتروني / الهوية الوطنية *"
               className="rounded border-2 bg-[#F9F9F9] px-2 py-3 text-gray-G30 placeholder:py-1 placeholder:text-neutral-400 w-full"
             />
-            {errors.email && (
-              <p className="text-red-400">This field is required</p>
-            )}
           </label>
           <label className="flex flex-col gap-2">
             <p className="font-bold text-sm">كلمة المرور *</p>
             <input
-              {...register("password", { required: true })}
+              required
+              id="password"
+              name="password"
               type="password"
-              placeholder="البريد الإلكتروني / الهوية الوطنية *"
+              placeholder="كلمة المرور*"
               className="rounded border-2 w-full bg-[#F9F9F9] px-2 py-3 text-gray-G30 placeholder:py-1 placeholder:text-neutral-400"
-            />{" "}
-            {errors.password && (
-              <p className="text-red-400">This field is required</p>
-            )}
+            />
           </label>
-
           <CtaButton
-            disabled={isLoading}
+            disabled={loading}
             className="w-full rounded-md font-bold disabled:bg-gray-500"
             type="submit"
           >
-            {isLoading ? "loading..." : " تسجيل الدخول"}
+            {loading ? <CircularProgress size={25} /> : "تسجيل الدخول"}
           </CtaButton>
         </form>
+        <Box mt={2} textAlign="center">
+          <Link
+            to="/forgot-password"
+            style={{
+              textDecoration: "none",
+              color: "#90caf9",
+            }}
+          >
+            نسيت كلمة المرور؟
+          </Link>
+        </Box>
+        <Notification />
       </div>
     </main>
   );
 }
-
-// Login.noLayout = true;
-
-// export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-//   const { authenticated, redirectTo } = await authProvider.check(context);
-
-//   // const translateProps = await serverSideTranslations(context.locale ?? "ar", [
-//   //   "common",
-//   // ]);
-
-//   if (authenticated) {
-//     return {
-//       props: {},
-//       redirect: {
-//         destination: redirectTo ?? "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: {},
-//   };
-// };
