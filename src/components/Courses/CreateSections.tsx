@@ -12,7 +12,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
 } from "@mui/material";
 import { useNotify } from "react-admin";
 import { useParams } from "react-router-dom";
@@ -26,7 +25,7 @@ interface FormInputs {
   notes: string;
   description: string;
   files: {
-    id: string; // Add id field to identify each item uniquely
+    id: string;
     format: string;
     src: string;
     contentType: string;
@@ -36,7 +35,7 @@ interface FormInputs {
     isPreview: boolean;
   }[];
   test: {
-    id: string; // Add id field to identify each item uniquely
+    id: string;
     question: string;
     options: string[];
     answers: string[];
@@ -89,10 +88,19 @@ const CreateCourseSection: React.FC = () => {
   const [openTestModal, setOpenTestModal] = React.useState(false);
   const [editFileIndex, setEditFileIndex] = React.useState<number | null>(null);
   const [editTestIndex, setEditTestIndex] = React.useState<number | null>(null);
+  const [uploadedFile, setUploadedFile] = React.useState<File | null>(null);
+  const [filePreview, setFilePreview] = React.useState<string | null>(null);
 
   const onSubmit = async (data: FormInputs) => {
+    const { files, test, ...restData } = data;
+    const cleanedData = {
+      ...restData,
+      files: files.map(({ id, ...rest }) => rest),
+      test: test.map(({ id, ...rest }) => rest),
+    };
+
     try {
-      const response = await createCourseSection({ variables: data });
+      const response = await createCourseSection({ variables: cleanedData });
       if (response.data.courseSection_create.success) {
         notify("Course section created successfully", { type: "success" });
         reset(); // Reset form after successful submission
@@ -117,6 +125,19 @@ const CreateCourseSection: React.FC = () => {
     }
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+      const previewURL = URL.createObjectURL(file);
+      setFilePreview(previewURL);
+      setValue("files.0.src", previewURL);
+      setValue("files.0.format", file.type.split("/")[1]);
+      setValue("files.0.contentType", file.type);
+      setValue("files.0.size", file.size);
+    }
+  };
+
   const handleFileSubmit = (data: FormInputs) => {
     if (editFileIndex !== null) {
       updateFile(editFileIndex, data.files[0]);
@@ -125,7 +146,8 @@ const CreateCourseSection: React.FC = () => {
     }
     setOpenFileModal(false);
     setEditFileIndex(null);
-    // reset(); // Reset form after adding/editing file
+    setUploadedFile(null);
+    setFilePreview(null);
   };
 
   const handleTestSubmit = (data: FormInputs) => {
@@ -136,18 +158,16 @@ const CreateCourseSection: React.FC = () => {
     }
     setOpenTestModal(false);
     setEditTestIndex(null);
-    // reset(); // Reset form after adding/editing test
   };
 
   const handleEditFile = (index: number) => {
     setEditFileIndex(index);
-    // No need to setValue here, as it directly accesses fileFields[index]
+    setFilePreview(fileFields[index].src);
     setOpenFileModal(true);
   };
 
   const handleEditTest = (index: number) => {
     setEditTestIndex(index);
-    // No need to setValue here, as it directly accesses testFields[index]
     setOpenTestModal(true);
   };
 
@@ -187,13 +207,13 @@ const CreateCourseSection: React.FC = () => {
             </Button>
           </label>
           {bannerPreview && (
-            <div className="mt-4 flex place-content-center">
+            <div className="mt-4 flex place-content-center max-h-[300px]">
               <Image
                 src={bannerPreview}
                 width={300}
                 height={300}
                 alt="معاينة البانر"
-                className="object-cover rounded"
+                className="object-contain rounded"
               />
             </div>
           )}
@@ -224,19 +244,27 @@ const CreateCourseSection: React.FC = () => {
             {fileFields.map((field, index) => (
               <div
                 key={field.id}
-                className="flex items-center justify-between space-y-2"
+                className="flex items-center justify-between space-y-2 gap-5"
               >
-                <div>
+                <div className="flex items-center justify-between gap-4 w-full">
                   <Typography variant="body1">{field.title}</Typography>
                   <Typography variant="body2">{field.description}</Typography>
+                  <Typography variant="body2">{field.format}</Typography>
+                  <Typography variant="body2">{field.size}</Typography>
                 </div>
-                <div>
-                  <IconButton onClick={() => handleEditFile(index)}>
+                <div className="flex gap-2">
+                  <button
+                    className="btn bg-primary-P300 p-4 text-white"
+                    onClick={() => handleEditFile(index)}
+                  >
                     <RiPencilFill />
-                  </IconButton>
-                  <IconButton onClick={() => removeFile(index)}>
+                  </button>
+                  <button
+                    className="btn bg-red-500 p-4 text-white"
+                    onClick={() => removeFile(index)}
+                  >
                     <RiDeleteBinFill />
-                  </IconButton>
+                  </button>
                 </div>
               </div>
             ))}
@@ -258,13 +286,19 @@ const CreateCourseSection: React.FC = () => {
                 <div>
                   <Typography variant="body1">{field.question}</Typography>
                 </div>
-                <div>
-                  <IconButton onClick={() => handleEditTest(index)}>
+                <div className="flex gap-2">
+                  <button
+                    className="btn bg-primary-P300 p-4 text-white"
+                    onClick={() => handleEditTest(index)}
+                  >
                     <RiPencilFill />
-                  </IconButton>
-                  <IconButton onClick={() => removeTest(index)}>
+                  </button>
+                  <button
+                    className="btn bg-red-500 p-4 text-white"
+                    onClick={() => removeTest(index)}
+                  >
                     <RiDeleteBinFill />
-                  </IconButton>
+                  </button>
                 </div>
               </div>
             ))}
@@ -300,10 +334,61 @@ const CreateCourseSection: React.FC = () => {
         </DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit(handleFileSubmit)}>
+            <input
+              type="file"
+              accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx"
+              onChange={handleFileUpload}
+              style={{ display: "block", margin: "16px 0" }}
+            />
+            {filePreview && (
+              <div className="my-4">
+                {uploadedFile?.type.startsWith("image/") && (
+                  <Image
+                    src={filePreview}
+                    alt="معاينة الملف"
+                    width={200}
+                    height={200}
+                    style={{
+                      maxHeight: "200px",
+                      margin: "0 auto",
+                      display: "block",
+                      objectFit: "contain",
+                    }}
+                  />
+                )}
+                {uploadedFile?.type.startsWith("video/") && (
+                  <video
+                    controls
+                    style={{
+                      maxHeight: "200px",
+                      margin: "0 auto",
+                      display: "block",
+                    }}
+                  >
+                    <source src={filePreview} type={uploadedFile.type} />
+                    Your browser does not support the video tag.
+                  </video>
+                )}
+                {!uploadedFile?.type.startsWith("image/") &&
+                  !uploadedFile?.type.startsWith("video/") && (
+                    <a
+                      href={filePreview}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      عرض الملف
+                    </a>
+                  )}
+              </div>
+            )}
             <TextField
               required
               label="العنوان"
-              {...register("files.0.title")}
+              {...register(
+                editFileIndex !== null
+                  ? `files.${editFileIndex}.title`
+                  : "files.0.title"
+              )}
               fullWidth
               variant="outlined"
               margin="dense"
@@ -311,50 +396,25 @@ const CreateCourseSection: React.FC = () => {
             <TextField
               required
               label="الوصف"
-              {...register("files.0.description")}
-              fullWidth
-              variant="outlined"
-              margin="dense"
-            />
-            <TextField
-              required
-              label="صيغة الملف"
-              {...register("files.0.format")}
-              fullWidth
-              variant="outlined"
-              margin="dense"
-            />
-            <TextField
-              required
-              label="مصدر الملف"
-              {...register("files.0.src")}
-              fullWidth
-              variant="outlined"
-              margin="dense"
-            />
-            <TextField
-              required
-              label="نوع المحتوى"
-              {...register("files.0.contentType")}
-              fullWidth
-              variant="outlined"
-              margin="dense"
-            />
-            <TextField
-              required
-              label="الحجم"
-              type="number"
-              {...register("files.0.size")}
+              {...register(
+                editFileIndex !== null
+                  ? `files.${editFileIndex}.description`
+                  : "files.0.description"
+              )}
               fullWidth
               variant="outlined"
               margin="dense"
             />
             <Controller
-              name="files.0.isPreview"
+              name={
+                editFileIndex !== null
+                  ? `files.${editFileIndex}.isPreview`
+                  : "files.0.isPreview"
+              }
               control={control}
               render={({ field }) => (
                 <label className="flex items-center space-x-2">
-                  <input type="checkbox" {...field} />
+                  <input type="checkbox" {...field} checked={field.value} />
                   <span>هل هو معاينة</span>
                 </label>
               )}
@@ -381,7 +441,11 @@ const CreateCourseSection: React.FC = () => {
             <TextField
               required
               label="السؤال"
-              {...register("test.0.question")}
+              {...register(
+                editTestIndex !== null
+                  ? `test.${editTestIndex}.question`
+                  : "test.0.question"
+              )}
               fullWidth
               variant="outlined"
               margin="dense"
@@ -389,7 +453,11 @@ const CreateCourseSection: React.FC = () => {
             <TextField
               required
               label="الخيار 1"
-              {...register("test.0.options.0")}
+              {...register(
+                editTestIndex !== null
+                  ? `test.${editTestIndex}.options.0`
+                  : "test.0.options.0"
+              )}
               fullWidth
               variant="outlined"
               margin="dense"
@@ -397,7 +465,11 @@ const CreateCourseSection: React.FC = () => {
             <TextField
               required
               label="الخيار 2"
-              {...register("test.0.options.1")}
+              {...register(
+                editTestIndex !== null
+                  ? `test.${editTestIndex}.options.1`
+                  : "test.0.options.1"
+              )}
               fullWidth
               variant="outlined"
               margin="dense"
@@ -405,17 +477,25 @@ const CreateCourseSection: React.FC = () => {
             <TextField
               required
               label="الإجابة"
-              {...register("test.0.answers.0")}
+              {...register(
+                editTestIndex !== null
+                  ? `test.${editTestIndex}.answers.0`
+                  : "test.0.answers.0"
+              )}
               fullWidth
               variant="outlined"
               margin="dense"
             />
             <Controller
-              name="test.0.isAnswerMultiple"
+              name={
+                editTestIndex !== null
+                  ? `test.${editTestIndex}.isAnswerMultiple`
+                  : "test.0.isAnswerMultiple"
+              }
               control={control}
               render={({ field }) => (
                 <label className="flex items-center space-x-2">
-                  <input type="checkbox" {...field} />
+                  <input type="checkbox" {...field} checked={field.value} />
                   <span>هل هناك أكثر من إجابة</span>
                 </label>
               )}
@@ -424,7 +504,11 @@ const CreateCourseSection: React.FC = () => {
               required
               label="الدرجة"
               type="number"
-              {...register("test.0.score")}
+              {...register(
+                editTestIndex !== null
+                  ? `test.${editTestIndex}.score`
+                  : "test.0.score"
+              )}
               fullWidth
               variant="outlined"
               margin="dense"
