@@ -24,7 +24,7 @@ import CourseSections from "../Courses/CourseSections";
 import CreateCourse from "../Courses/CreateCourse";
 import CreateCourseSection from "../Courses/CreateSections";
 import { almarai } from "@/utils/helpers";
-import CLayout from "../Layout/CLayout";
+import Layout from "../Layout";
 
 const myTheme = createTheme({
   ...defaultTheme,
@@ -70,7 +70,7 @@ const CustomAdmin = () => {
           <CoreAdminUI
             loginPage={Login}
             dashboard={Dashboard}
-            layout={CLayout}
+            layout={Layout}
             title={"Ataasil University"}
           >
             <CustomRoutes>
