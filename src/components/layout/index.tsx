@@ -4,10 +4,7 @@ import { almarai, inter } from "@/utils/helpers";
 import { PropsWithChildren } from "react";
 import { CoreLayoutProps } from "react-admin";
 
-export const Layout: React.FC<PropsWithChildren> = ({
-  title,
-  children,
-}: CoreLayoutProps) => {
+const Layout: React.FC<PropsWithChildren> = ({ children }: CoreLayoutProps) => {
   return (
     <div
       className={`scroll-smooth drawer lg:drawer-open min-h-screen ${almarai.className} ${almarai.variable} ${inter.variable}`}
@@ -23,3 +20,5 @@ export const Layout: React.FC<PropsWithChildren> = ({
     </div>
   );
 };
+
+export default Layout;
