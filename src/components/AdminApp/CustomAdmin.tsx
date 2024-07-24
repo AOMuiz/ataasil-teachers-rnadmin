@@ -24,7 +24,7 @@ import CourseSections from "../Courses/CourseSections";
 import CreateCourse from "../Courses/CreateCourse";
 import CreateCourseSection from "../Courses/CreateSections";
 import { almarai } from "@/utils/helpers";
-import Layout from "../Layout/Custom";
+import Layout from "../Layout";
 
 const myTheme = createTheme({
   ...defaultTheme,
