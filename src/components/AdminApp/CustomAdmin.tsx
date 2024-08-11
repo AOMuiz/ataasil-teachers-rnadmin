@@ -15,7 +15,7 @@ import { Dashboard } from "../dashboard";
 import buildProvider, { client } from "@/buildprovider";
 import authProvider from "@/authProvider";
 import Login from "../Login";
-import { Layout } from "../Layout";
+import { Layout } from "../layout";
 import ActivateAccount from "../ActivateAccount";
 import Courses from "../Courses";
 import EditProfile from "../EditProfile";
