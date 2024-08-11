@@ -5,7 +5,6 @@ import {
   CoreAdminUI,
   CustomRoutes,
   DataProvider,
-  Resource,
   defaultTheme,
 } from "react-admin";
 import { ApolloProvider } from "@apollo/client";
@@ -15,7 +14,6 @@ import { Dashboard } from "../dashboard";
 import buildProvider, { client } from "@/buildprovider";
 import authProvider from "@/authProvider";
 import Login from "../Login";
-import { Layout } from "../Layout";
 import ActivateAccount from "../ActivateAccount";
 import Courses from "../Courses";
 import EditProfile from "../EditProfile";
@@ -26,6 +24,7 @@ import CourseSections from "../Courses/CourseSections";
 import CreateCourse from "../Courses/CreateCourse";
 import CreateCourseSection from "../Courses/CreateSections";
 import { almarai } from "@/utils/helpers";
+import Layout from "../Layout";
 
 const myTheme = createTheme({
   ...defaultTheme,

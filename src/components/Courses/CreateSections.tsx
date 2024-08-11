@@ -414,7 +414,11 @@ const CreateCourseSection: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <label className="flex items-center space-x-2">
-                  <input type="checkbox" {...field} checked={field.value} />
+                  <input
+                    type="checkbox"
+                    checked={field.value}
+                    onChange={field.onChange}
+                  />
                   <span>هل هو معاينة</span>
                 </label>
               )}
@@ -495,7 +499,11 @@ const CreateCourseSection: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <label className="flex items-center space-x-2">
-                  <input type="checkbox" {...field} checked={field.value} />
+                  <input
+                    type="checkbox"
+                    checked={field.value}
+                    onChange={field.onChange}
+                  />
                   <span>هل هناك أكثر من إجابة</span>
                 </label>
               )}

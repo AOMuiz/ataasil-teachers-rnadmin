@@ -1,15 +1,16 @@
 import polyglotI18nProvider from "ra-i18n-polyglot";
 import en from "ra-language-english";
 import { TranslationMessages } from "react-admin";
-// import ar from "ra-language-arabic";
 
+// Define the type for translations object
 const translations: {
-  en: TranslationMessages;
+  [key: string]: TranslationMessages;
 } = { en: en };
 
 export const i18nProvider = polyglotI18nProvider(
-  (locale) => {
-    return translations[locale];
+  (locale: string) => {
+    // Handle missing translations gracefully
+    return translations[locale] || translations.en;
   },
   "en", // default locale
   [
