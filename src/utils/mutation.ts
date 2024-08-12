@@ -128,32 +128,6 @@ export const COURSE_SECTION_CREATE = gql`
       code
       success
       error
-      data {
-        _id
-        course
-        title
-        banner
-        notes
-        description
-        files {
-          format
-          src
-          contentType
-          size
-          description
-          title
-          isPreview
-        }
-        test {
-          _id
-          question
-          options
-          answers
-          isAnswerMultiple
-          score
-        }
-        isCompleted
-      }
     }
   }
 `;

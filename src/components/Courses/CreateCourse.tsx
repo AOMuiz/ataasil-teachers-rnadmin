@@ -1,95 +1,52 @@
-import * as React from "react";
-import { useState } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  CircularProgress,
-} from "@mui/material";
-import { useMutation } from "@apollo/client";
-import { useAuthenticated, useNotify } from "react-admin";
-import { gql } from "@apollo/client";
-import { CREATE_COURSE } from "@/utils/mutation";
-import { Val } from "@/utils/helpers";
-
-interface CourseFormState {
-  title: string;
-  description: string;
-  category: string;
-  price: number;
-  banner: string;
-  liveSessionLink: string;
-  liveSessionDescription: string;
-  liveSessionTimezone: string;
-}
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import React, { useMemo } from "react";
+import { useAuthenticated } from "react-admin";
+import { CategorySelect, FormField } from "./FormComponents";
+import { useCourseForm } from "./useCourseForm";
+import { useCreateCourse } from "./useCreateCourse";
+import { CATEGORIES } from "./data";
 
 const CreateCourse: React.FC = () => {
-  const [formState, setFormState] = useState<CourseFormState>({
-    title: "",
-    description: "",
-    category: "",
-    price: 0,
-    banner: "",
-    liveSessionLink: "",
-    liveSessionDescription: "",
-    liveSessionTimezone: "",
-  });
-
-  const {
-    title,
-    description,
-    category,
-    price,
-    banner,
-    liveSessionLink,
-    liveSessionDescription,
-    liveSessionTimezone,
-  } = formState;
-
-  const [createCourse, { loading, error }] = useMutation(CREATE_COURSE);
-  const notify = useNotify();
   useAuthenticated();
+  const { formState, handleInputChange } = useCourseForm();
+  const { handleSave, loading, error } = useCreateCourse();
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: name === "price" ? parseFloat(value) : value,
-    }));
-  };
-
-  const handleSave = async () => {
-    try {
-      const response = await createCourse({
-        variables: {
-          title,
-          description,
-          banner,
-          liveSessions: [
-            {
-              link: liveSessionLink,
-              description: liveSessionDescription,
-              timezone: liveSessionTimezone,
-              time: new Date().toISOString(), // Example, adjust as necessary
-            },
-          ],
-          category,
-          price,
-        },
-      });
-      if (response.data.course_create.success) {
-        notify("تم إنشاء الدورة بنجاح", { type: "success" });
-      } else {
-        notify(response.data.course_create.error, { type: "error" });
-      }
-    } catch (err) {
-      notify("حدث خطأ. يرجى المحاولة مرة أخرى.", { type: "error" });
-      console.error(err);
-    }
-  };
+  const DATA = useMemo(
+    () => [
+      { label: "Title", name: "title", value: formState.title },
+      {
+        label: "Description",
+        name: "description",
+        value: formState.description,
+      },
+      { label: "Price", name: "price", value: formState.price.toString() },
+      { label: "Banner", name: "banner", value: formState.banner },
+      {
+        label: "Live Session Link",
+        name: "liveSessionLink",
+        value: formState.liveSessionLink,
+      },
+      {
+        label: "Live Session Description",
+        name: "liveSessionDescription",
+        value: formState.liveSessionDescription,
+      },
+      {
+        label: "Live Session Timezone",
+        name: "liveSessionTimezone",
+        value: formState.liveSessionTimezone,
+      },
+    ],
+    [
+      formState.banner,
+      formState.description,
+      formState.liveSessionDescription,
+      formState.liveSessionLink,
+      formState.liveSessionTimezone,
+      formState.price,
+      formState.title,
+    ]
+  );
 
   return (
     <Box>
@@ -102,40 +59,21 @@ const CreateCourse: React.FC = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSave();
+          handleSave(formState);
         }}
       >
-        {[
-          { label: "Title", name: "title", value: title },
-          { label: "Description", name: "description", value: description },
-          { label: "Category", name: "category", value: category },
-          { label: "Price", name: "price", value: price.toString() },
-          { label: "Banner", name: "banner", value: banner },
-          {
-            label: "Live Session Link",
-            name: "liveSessionLink",
-            value: liveSessionLink,
-          },
-          {
-            label: "Live Session Description",
-            name: "liveSessionDescription",
-            value: liveSessionDescription,
-          },
-          {
-            label: "Live Session Timezone",
-            name: "liveSessionTimezone",
-            value: liveSessionTimezone,
-          },
-        ].map((field, index) => (
-          <TextField
+        <CategorySelect
+          data={CATEGORIES}
+          value={formState.category}
+          handleInputChange={(e: any) => handleInputChange(e)}
+        />
+        {DATA.map((field, index) => (
+          <FormField
             key={index}
             label={field.label}
-            variant="outlined"
-            margin="normal"
-            fullWidth
             name={field.name}
             value={field.value}
-            onChange={handleInputChange}
+            handleInputChange={handleInputChange}
           />
         ))}
 
@@ -151,6 +89,7 @@ const CreateCourse: React.FC = () => {
             color="primary"
             type="submit"
             disabled={loading}
+            sx={{ width: "210px" }}
           >
             {loading ? (
               <CircularProgress size={25} color="inherit" />
